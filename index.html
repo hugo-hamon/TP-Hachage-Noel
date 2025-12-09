@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Opération S.L.E.I.G.H. // Terminal</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=VT323&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="scanlines"></div>
+
+<div class="terminal-container">
+    <header>
+        <div class="top-bar">
+            <span>CONN: SECURE (NORTH_POLE_VPN)</span>
+            <span>MEM: 64KB OK</span>
+        </div>
+        <h1>
+            <span class="prefix">>>></span> PROJECT <span class="highlight">S.L.E.I.G.H.</span>
+        </h1>
+        <p class="subtitle">System for Logistics and Efficient Inventory Handling</p>
+    </header>
+
+    <nav class="tabs">
+        <button class="tab-btn active" data-target="briefing">0. BRIEFING</button>
+        <button class="tab-btn" data-target="mission1">1. ARCHITECTURE</button>
+        <button class="tab-btn" data-target="mission2">2. MOTEUR</button>
+        <button class="tab-btn" data-target="mission3">3. BIG DATA</button>
+        <button class="tab-btn" data-target="mission4">4. OPTIMISATION</button>
+    </nav>
+
+    <main>
+        <section id="briefing" class="panel active">
+            <div class="typewriter">
+                <p>> Initialisation du canal sécurisé...</p>
+                <p>> Décryptage du message du Père Noël...</p>
+            </div>
+            
+            <div class="message-box">
+                <h3>⚠️ ALERTE CRITIQUE</h3>
+                <p>Ingénieurs, nous avons un problème. La population mondiale a atteint un seuil critique. Notre base de données actuelle (une simple <span class="tooltip" data-desc="Structure de données où chaque élément pointe vers le suivant. Recherche lente en O(N).">liste chaînée</span>) met trop de temps à vérifier si un enfant a été sage.</p>
+                
+                <p>Avec <strong>2 milliards d'entrées</strong>, la complexité linéaire nous empêche de décoller à temps. Nous devons passer à une recherche instantanée.</p>
+                
+                <p><strong>VOTRE MISSION :</strong> Implémenter une <span class="tooltip" data-desc="Tableau associatif permettant de retrouver une clé en temps constant O(1) grâce à une fonction de hachage.">Table de Hachage</span> avant le 24 décembre.</p>
+            </div>
+        </section>
+
+        <section id="mission1" class="panel">
+            <h2>/// PHASE 1 : STRUCTURES DE DONNÉES</h2>
+            <p>Nous devons définir les conteneurs mémoire. Le système utilise un <span class="tooltip" data-desc="Méthode pour gérer les collisions : si deux clés ont le même hash, on les stocke les unes à la suite des autres dans une liste.">chaînage linéaire</span> pour gérer les conflits d'index.</p>
+            
+            <div class="task-list">
+                <p>[OBJECTIF 1.1] Définir les structures dans <code>santa_hash.h</code> :</p>
+            </div>
+
+            <div class="code-editor">
+                <div class="editor-header">santa_hash.h</div>
+<pre><code>typedef struct {
+    char * key;          <span class="comment">/* Login (ex: "Elf_01") */</span>
+    char mail;           <span class="comment">/* Email de contact */</span>
+    unsigned int date;   <span class="comment">/* Format AAAAMMJJ */</span>
+} HElement;
+
+typedef struct HCell {
+    HElement * element;  <span class="comment">/* Pointeur vers la donnée */</span>
+    struct HCell * next; <span class="comment">/* Gestion collision : suivant */</span>
+} HCell;
+
+typedef struct {
+    HCell ** table;      <span class="comment">/* Tableau de pointeurs (Buckets) */</span>
+    unsigned int size;   <span class="comment">/* Taille du tableau */</span>
+} HTable;</code></pre>
+            </div>
+
+            <div class="task-list">
+                <p>[OBJECTIF 1.2] Implémenter les primitives :</p>
+                <ul>
+                    <li><code>createHTable(size)</code> : Alloue la table. <strong>Attention :</strong> Initialisez tout à NULL !</li>
+                    <li><code>createHElement()</code> : Saisie des données d'un enfant.</li>
+                    <li><code>enqueueHElement()</code> : Ajoute en fin de liste chaînée.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="mission2" class="panel">
+            <h2>/// PHASE 2 : INDEXATION & HACHAGE</h2>
+            <p>Il faut maintenant distribuer les enfants dans les "tiroirs" (buckets) de la table.</p>
+
+            <div class="info-terminal">
+                > INFO: Une <span class="tooltip" data-desc="Situation où deux clés différentes produisent le même index (hash).">collision</span> survient quand deux enfants ont le même hash.
+                > ACTION: Ils seront stockés dans la même liste chaînée.
+            </div>
+
+            <p><strong>2.1 L'Algorithme Naïf (Prototype)</strong></p>
+            <p>Pour commencer, utilisez cette formule simple (mais peu efficace) :</p>
+            <div class="code-editor">
+<pre><code><span class="comment">// Calcule l'index basé sur la longueur du nom</span>
+int hash_index = (strlen(key) - 1) % size;</code></pre>
+            </div>
+
+            <p><strong>2.2 Fonctions CRUD</strong></p>
+            <ul>
+                <li><code>addHElement</code> : Calcule le hash -> Trouve la case -> Ajoute à la liste.</li>
+                <li><code>printHTable</code> : Affiche le contenu de chaque tiroir non vide.</li>
+                <li><code>getHElement</code> : Retrouve un enfant en <span class="tooltip" data-desc="Notation Big O. O(1) signifie que le temps de recherche ne dépend pas du nombre d'éléments. C'est instantané.">O(1)</span>.</li>
+            </ul>
+        </section>
+
+        <section id="mission3" class="panel">
+            <h2>/// PHASE 3 : TEST DE CHARGE</h2>
+            <p>Le prototype fonctionne. Testons avec la liste globale.</p>
+            
+            <div class="download-zone">
+                <a href="#" class="retro-btn">⬇️ TÉLÉCHARGER DATASET_NOEL.TXT</a>
+            </div>
+
+            <p><strong>3.1 Métriques de Performance</strong></p>
+            <p>Modifiez votre affichage. Nous ne voulons pas voir les noms, mais les <strong>statistiques</strong> de répartition.</p>
+            
+            <div class="code-editor">
+                <div class="editor-header">Output attendu</div>
+<pre><code>Index 0 : 124 enfants
+Index 1 : 0 enfants (Vide)
+Index 2 : 4500 enfants (⚠️ SURCHARGE/COLLISIONS)</code></pre>
+            </div>
+
+            <p><strong>3.2 Calculateur de Collisions</strong></p>
+            <p>Implémentez <code>computeNbCollisions(HTable h)</code>. Cette fonction compte combien d'éléments ne sont pas directement accessibles (c'est-à-dire qu'ils sont 2ème, 3ème... dans leur liste).</p>
+        </section>
+
+        <section id="mission4" class="panel">
+            <h2>/// PHASE 4 : OPTIMISATION ALGORITHMIQUE</h2>
+            <p>L'algorithme naïf (longueur du mot) est catastrophique. Tous les noms de 5 lettres finissent au même endroit.</p>
+
+            <div class="task-list">
+                <p><strong>4.1 Hachage ASCII (v1)</strong></p>
+                <p>Utilisez le code ASCII du <em>premier caractère</em>.</p>
+                <p><em>Analyse :</em> Que se passe-t-il si tous les logins commencent par "Elfe_" ?</p>
+            </div>
+
+            <div class="task-list">
+                <p><strong>4.2 Hachage Somme (v2)</strong></p>
+                <p>Sommez les codes ASCII de <em>tous</em> les caractères.</p>
+                <p><em>Analyse :</em> Comparez le nombre de collisions avec la version précédente. La répartition est-elle plus uniforme ?</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>TERMINAL V2.4 | PÔLE NORD IT DEPT | <span id="clock">--:--:--</span></p>
+    </footer>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
