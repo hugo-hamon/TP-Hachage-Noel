@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Opération S.L.E.I.G.H. // Terminal</title>
+    <title>Opération S.L.E.I.D // Terminal</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=VT323&display=swap" rel="stylesheet">
+    <link rel="icon" href="icon.png">
 </head>
 <body>
 
@@ -19,9 +20,9 @@
             <span>MEM: 64KB OK</span>
         </div>
         <h1>
-            <span class="prefix">>>></span> PROJECT <span class="highlight">S.L.E.I.G.H.</span>
+            <span class="prefix">>>></span> PROJECT <span class="highlight">S.L.E.I.D</span>
         </h1>
-        <p class="subtitle">System for Logistics and Efficient Inventory Handling</p>
+        <p class="subtitle">System for Logistics and Efficient Delivery</p>
     </header>
 
     <nav class="tabs">
@@ -41,11 +42,11 @@
             
             <div class="message-box">
                 <h3>⚠️ ALERTE CRITIQUE</h3>
-                <p>Ingénieurs, nous avons un problème. La population mondiale a atteint un seuil critique. Notre base de données actuelle (une simple <span class="tooltip" data-desc="Structure de données où chaque élément pointe vers le suivant. Recherche lente en O(N).">liste chaînée</span>) met trop de temps à vérifier si un enfant a été sage.</p>
+                <p>Cher élève, nous avons un problème. La population mondiale a atteint un seuil critique. Notre base de données actuelle (une simple <span class="tooltip" data-desc="Structure de données où chaque élément pointe vers le suivant. Recherche lente en O(N).">liste chaînée</span>) met trop de temps à vérifier si un enfant a été sage.</p>
                 
-                <p>Avec <strong>2 milliards d'entrées</strong>, la complexité linéaire nous empêche de décoller à temps. Nous devons passer à une recherche instantanée.</p>
+                <p>Avec <strong>2 milliards d'entrées</strong>, la complexité linéaire nous empêche de distribuer les cadeaux à temps. Nous devons passer à une recherche en <span class="tooltip" data-desc="Temps de recherche indépendant du nombre d'éléments. O(1) signifie que le temps de recherche est constant.">temps constant</span>.</p>
                 
-                <p><strong>VOTRE MISSION :</strong> Implémenter une <span class="tooltip" data-desc="Tableau associatif permettant de retrouver une clé en temps constant O(1) grâce à une fonction de hachage.">Table de Hachage</span> avant le 24 décembre.</p>
+                <p><strong>VOTRE MISSION :</strong> Implémenter une <span class="tooltip" data-desc="Tableau associatif permettant de retrouver une clé en temps constant O(1) grâce à une fonction de hachage.">Table de Hachage</span> avant le 24 décembre afin d'aider le Père Noël à distribuer les cadeaux à temps.</p>
             </div>
         </section>
 
@@ -61,27 +62,29 @@
                 <div class="editor-header">santa_hash.h</div>
 <pre><code>typedef struct {
     char * key;          <span class="comment">/* Login (ex: "Elf_01") */</span>
-    char mail;           <span class="comment">/* Email de contact */</span>
-    unsigned int date;   <span class="comment">/* Format AAAAMMJJ */</span>
-} HElement;
+    char * mail;           <span class="comment">/* Email de contact */</span>
+    unsigned int date;   <span class="comment">/* Format AAAAMMJJ ex: 20251215*/</span>
+} <span class="tooltip" data-desc="HElement représente un élément de la table de hachage. Ici, les éléments sont composés de 3 champs : une clé correspondant à un login, une adresse mail, et une date d'inscription stockée sous la forme d'unentier non signé">HElement</span>;
 
 typedef struct HCell {
     HElement * element;  <span class="comment">/* Pointeur vers la donnée */</span>
     struct HCell * next; <span class="comment">/* Gestion collision : suivant */</span>
-} HCell;
+} <span class="tooltip" data-desc="HCell représente une cellule de la table de hachage, c'est-à-dire une enveloppe autour des éléments. Il s'agit des cellules qui composeront les listes simplement chaînées de chaque entrée de la table de hachage.">HCell</span>;
 
 typedef struct {
     HCell ** table;      <span class="comment">/* Tableau de pointeurs (Buckets) */</span>
     unsigned int size;   <span class="comment">/* Taille du tableau */</span>
-} HTable;</code></pre>
+} <span class="tooltip" data-desc="HTable représente la table de hachage à proprement parler, à l'aide d'un tableau de pointeurs vers une liste simplement chaînée et la taille de ce tableau.">HTable</span>;</code></pre>
             </div>
 
             <div class="task-list">
                 <p>[OBJECTIF 1.2] Implémenter les primitives :</p>
                 <ul>
-                    <li><code>createHTable(size)</code> : Alloue la table. <strong>Attention :</strong> Initialisez tout à NULL !</li>
-                    <li><code>createHElement()</code> : Saisie des données d'un enfant.</li>
-                    <li><code>enqueueHElement()</code> : Ajoute en fin de liste chaînée.</li>
+                    <li><code><span class="tooltip" data-desc="Notez que les collisions étant gérées par chaînage linéaire, l’argument size ne correspond pas à la capacité du répertoire mais au nombre d’entrées de la table de hachage. Plus ce nombre est important, moins il y aura de collisions, mais il faudra alors que la fonction de hachage soit adaptée.">HTable* createHTable(unsigned int size)</span></code> :  Permet de  créer un répertoire vide. Cette fontion prend en argument le nombre d’entrées de la table de hachage qui sera retournée. On prendra soin d’initialiser toutes les entrées de cette table à la valeur NULL.</li>
+                    <li><code>HElement* createHElement();</code> :  Créer et retourne une nouvelle instance de la structure HElement. Les champs de cette instance seront initialisés par saisie au clavier.</li>
+                    <li><code>void printHElement(HElement h_elt);</code> : Affiche sur la sortie standard un élément fourni en argument.</li>
+                    <li><code>HCell * enqueueHElement(HCell *h_entry, HElement* h_elt);</code> : Permet d’ajouter un élément à une liste chaînée fournie en argument. Une nouvelle cellule sera créée qui encapsulera l’élément et qui sera ajoutée en queue de liste. Si la liste en argument est égale à NULL alors la fonction retournera une nouvelle liste constituée de l’unique cellule nouvellement créée.</li>
+                    <li><code><span class="tooltip" data-desc="Cette fonction fera appel à la fonction printHElement">void printHEntry(HCell *h_entry);</span></code> : Affiche en sortie standard une liste d'éléments fournie en argument.</li>
                 </ul>
             </div>
         </section>
@@ -96,18 +99,6 @@ typedef struct {
             </div>
 
             <p><strong>2.1 L'Algorithme Naïf (Prototype)</strong></p>
-            <p>Pour commencer, utilisez cette formule simple (mais peu efficace) :</p>
-            <div class="code-editor">
-<pre><code><span class="comment">// Calcule l'index basé sur la longueur du nom</span>
-int hash_index = (strlen(key) - 1) % size;</code></pre>
-            </div>
-
-            <p><strong>2.2 Fonctions CRUD</strong></p>
-            <ul>
-                <li><code>addHElement</code> : Calcule le hash -> Trouve la case -> Ajoute à la liste.</li>
-                <li><code>printHTable</code> : Affiche le contenu de chaque tiroir non vide.</li>
-                <li><code>getHElement</code> : Retrouve un enfant en <span class="tooltip" data-desc="Notation Big O. O(1) signifie que le temps de recherche ne dépend pas du nombre d'éléments. C'est instantané.">O(1)</span>.</li>
-            </ul>
         </section>
 
         <section id="mission3" class="panel">
@@ -117,36 +108,10 @@ int hash_index = (strlen(key) - 1) % size;</code></pre>
             <div class="download-zone">
                 <a href="dataset_noel.txt" class="retro-btn">⬇️ TÉLÉCHARGER DATASET_NOEL.TXT</a>
             </div>
-
-            <p><strong>3.1 Métriques de Performance</strong></p>
-            <p>Modifiez votre affichage. Nous ne voulons pas voir les noms, mais les <strong>statistiques</strong> de répartition.</p>
-            
-            <div class="code-editor">
-                <div class="editor-header">Output attendu</div>
-<pre><code>Index 0 : 124 enfants
-Index 1 : 0 enfants (Vide)
-Index 2 : 4500 enfants (⚠️ SURCHARGE/COLLISIONS)</code></pre>
-            </div>
-
-            <p><strong>3.2 Calculateur de Collisions</strong></p>
-            <p>Implémentez <code>computeNbCollisions(HTable h)</code>. Cette fonction compte combien d'éléments ne sont pas directement accessibles (c'est-à-dire qu'ils sont 2ème, 3ème... dans leur liste).</p>
         </section>
 
         <section id="mission4" class="panel">
             <h2>/// PHASE 4 : OPTIMISATION ALGORITHMIQUE</h2>
-            <p>L'algorithme naïf (longueur du mot) est catastrophique. Tous les noms de 5 lettres finissent au même endroit.</p>
-
-            <div class="task-list">
-                <p><strong>4.1 Hachage ASCII (v1)</strong></p>
-                <p>Utilisez le code ASCII du <em>premier caractère</em>.</p>
-                <p><em>Analyse :</em> Que se passe-t-il si tous les logins commencent par "Elfe_" ?</p>
-            </div>
-
-            <div class="task-list">
-                <p><strong>4.2 Hachage Somme (v2)</strong></p>
-                <p>Sommez les codes ASCII de <em>tous</em> les caractères.</p>
-                <p><em>Analyse :</em> Comparez le nombre de collisions avec la version précédente. La répartition est-elle plus uniforme ?</p>
-            </div>
         </section>
     </main>
 
@@ -155,6 +120,7 @@ Index 2 : 4500 enfants (⚠️ SURCHARGE/COLLISIONS)</code></pre>
     </footer>
 </div>
 
+<div id="retro-tooltip" class="hidden"></div>
 <script src="script.js"></script>
 </body>
 
