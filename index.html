@@ -31,87 +31,261 @@
         <button class="tab-btn" data-target="mission2">2. MOTEUR</button>
         <button class="tab-btn" data-target="mission3">3. BIG DATA</button>
         <button class="tab-btn" data-target="mission4">4. OPTIMISATION</button>
+        <button class="tab-btn highlight" data-target="mission5">5. [AVANCÉ]</button>
+        <button class="tab-btn" data-target="annex">6. ARCHIVES</button>
     </nav>
 
     <main>
         <section id="briefing" class="panel active">
             <div class="typewriter">
-                <p>> Initialisation du canal sécurisé...</p>
-                <p>> Décryptage du message du Père Noël...</p>
+                <p>> Connexion au traîneau [S.L.E.I.D. v4.0]...</p>
+                <p>> Analyse des systèmes critiques...</p>
+                <p class="error">> ERREUR: Latence CPU trop élevée.</p>
             </div>
             
             <div class="message-box">
-                <h3>⚠️ ALERTE CRITIQUE</h3>
-                <p>Cher élève, nous avons un problème. La population mondiale a atteint un seuil critique. Notre base de données actuelle (une simple <span class="tooltip" data-desc="Structure de données où chaque élément pointe vers le suivant. Recherche lente en O(N).">liste chaînée</span>) met trop de temps à vérifier si un enfant a été sage.</p>
+                <h3>⚠️ DÉFAILLANCE DU TABLEAU DE BORD</h3>
+                <p>Petits lutins, la situation est grave. Avec l'explosion démographique récente, le <strong>Tableau de Bord de Navigation</strong> du vieux traîneau n'arrive plus à suivre. Quand le Père Noël demande "Est-ce que cet enfant est sage ?", le système met plusieurs secondes à répondre.</p>
                 
-                <p>Avec <strong>2 milliards d'entrées</strong>, la complexité linéaire nous empêche de distribuer les cadeaux à temps. Nous devons passer à une recherche en <span class="tooltip" data-desc="Temps de recherche indépendant du nombre d'éléments. O(1) signifie que le temps de recherche est constant.">temps constant</span>.</p>
+                <p>Actuellement, le logiciel utilise une vieille version implémentant une <span class="tooltip" data-desc="Structure de données linéaire où chaque élément pointe vers le suivant. Pour trouver un élément, il faut parcourir toute la liste en O(N).">liste chaînée</span> pour stocker les profils. Avec <strong>2 milliards d'enfants</strong>, le temps de réponse empêche le Père Noël de répondre à la demande de chaque enfant.</p>
                 
-                <p><strong>VOTRE MISSION :</strong> Implémenter une <span class="tooltip" data-desc="Tableau associatif permettant de retrouver une clé en temps constant O(1) grâce à une fonction de hachage.">Table de Hachage</span> avant le 24 décembre afin d'aider le Père Noël à distribuer les cadeaux à temps.</p>
+                <p><strong>VOTRE MISSION :</strong> Vous devez réécrire le noyau du tableau de bord. Nous devons passer d'une recherche linéaire lente à une <span class="tooltip" data-desc="Structure de données (Hash Table) permettant un accès quasi-constant (O(1)) aux données via une clé unique.">Table de Hachage</span> performante avant la tournée de ce soir.</p>
             </div>
         </section>
 
         <section id="mission1" class="panel">
-            <h2>/// PHASE 1 : STRUCTURES DE DONNÉES</h2>
-            <p>Nous devons définir les conteneurs mémoire. Le système utilise un <span class="tooltip" data-desc="Méthode pour gérer les collisions : si deux clés ont le même hash, on les stocke les unes à la suite des autres dans une liste.">chaînage linéaire</span> pour gérer les conflits d'index.</p>
-            
+            <h2>/// PHASE 1 : STRUCTURE DE DONNÉES</h2>
+            <p>Afin de pouvoir répondre à la demande de chaque enfant, le département <strong>Administratif</strong> a mis à votre disposition une structure de données permettant de stocker les profils de chaque enfant.</p>
+
             <div class="task-list">
-                <p>[OBJECTIF 1.1] Définir les structures dans <code>santa_hash.h</code> :</p>
+                <p>[OBJECTIF 1.1] Créer et compléter le fichier <code>santa_hash.h</code> :</p>
             </div>
 
             <div class="code-editor">
                 <div class="editor-header">santa_hash.h</div>
 <pre><code>typedef struct {
-    char * key;          <span class="comment">/* Login (ex: "Elf_01") */</span>
-    char * mail;           <span class="comment">/* Email de contact */</span>
-    unsigned int date;   <span class="comment">/* Format AAAAMMJJ ex: 20251215*/</span>
-} <span class="tooltip" data-desc="HElement représente un élément de la table de hachage. Ici, les éléments sont composés de 3 champs : une clé correspondant à un login, une adresse mail, et une date d'inscription stockée sous la forme d'unentier non signé">HElement</span>;
+    char * surname;       <span class="comment">/* Ex: "Blanc" */</span>
+    char * firstname;     <span class="comment">/* Ex: "Léo" */</span>
+    unsigned int age;     <span class="comment">/* Age en années */</span>
+    char * address;       <span class="comment">/* Adresse postale */</span>
+    int is_wise;          <span class="comment">/* 1 = Sage */</span>
+} <span class="tooltip" data-desc="Structure représentant un dossier enfant complet.">Child</span>;
 
 typedef struct HCell {
-    HElement * element;  <span class="comment">/* Pointeur vers la donnée */</span>
-    struct HCell * next; <span class="comment">/* Gestion collision : suivant */</span>
-} <span class="tooltip" data-desc="HCell représente une cellule de la table de hachage, c'est-à-dire une enveloppe autour des éléments. Il s'agit des cellules qui composeront les listes simplement chaînées de chaque entrée de la table de hachage.">HCell</span>;
+    Child * element;      <span class="comment">/* Pointeur vers le dossier enfant */</span>
+    struct HCell * next;  <span class="comment">/* Gestion des collisions (liste chaînée) */</span>
+} <span class="tooltip" data-desc="Maillon de la chaîne pour gérer les collisions dans la table.">HCell</span>;
 
 typedef struct {
-    HCell ** table;      <span class="comment">/* Tableau de pointeurs (Buckets) */</span>
-    unsigned int size;   <span class="comment">/* Taille du tableau */</span>
-} <span class="tooltip" data-desc="HTable représente la table de hachage à proprement parler, à l'aide d'un tableau de pointeurs vers une liste simplement chaînée et la taille de ce tableau.">HTable</span>;</code></pre>
+    HCell ** table;     <span class="comment">/* Tableau de pointeurs (Les "Tiroirs") */</span>
+    unsigned int size;    <span class="comment">/* Nombre de tiroirs disponibles */</span>
+} <span class="tooltip" data-desc="La table de hachage principale représentant le disque dur du traîneau.">HTable</span>;</code></pre>
             </div>
 
             <div class="task-list">
-                <p>[OBJECTIF 1.2] Implémenter les primitives :</p>
+                <p>[OBJECTIF 1.2] Compléter les différentes fonctions :</p>
                 <ul>
-                    <li><code><span class="tooltip" data-desc="Notez que les collisions étant gérées par chaînage linéaire, l’argument size ne correspond pas à la capacité du répertoire mais au nombre d’entrées de la table de hachage. Plus ce nombre est important, moins il y aura de collisions, mais il faudra alors que la fonction de hachage soit adaptée.">HTable* createHTable(unsigned int size)</span></code> :  Permet de  créer un répertoire vide. Cette fontion prend en argument le nombre d’entrées de la table de hachage qui sera retournée. On prendra soin d’initialiser toutes les entrées de cette table à la valeur NULL.</li>
-                    <li><code>HElement* createHElement();</code> :  Créer et retourne une nouvelle instance de la structure HElement. Les champs de cette instance seront initialisés par saisie au clavier.</li>
-                    <li><code>void printHElement(HElement h_elt);</code> : Affiche sur la sortie standard un élément fourni en argument.</li>
-                    <li><code>HCell * enqueueHElement(HCell *h_entry, HElement* h_elt);</code> : Permet d’ajouter un élément à une liste chaînée fournie en argument. Une nouvelle cellule sera créée qui encapsulera l’élément et qui sera ajoutée en queue de liste. Si la liste en argument est égale à NULL alors la fonction retournera une nouvelle liste constituée de l’unique cellule nouvellement créée.</li>
-                    <li><code><span class="tooltip" data-desc="Cette fonction fera appel à la fonction printHElement">void printHEntry(HCell *h_entry);</span></code> : Affiche en sortie standard une liste d'éléments fournie en argument.</li>
+                    <li><code>HTable* createTable(unsigned int size)</code> : Alloue la mémoire du tableau de bord. <span class="highlight">CRITIQUE :</span> Tous les entrée de la table de hachage doivent être à NULL initialement.</li>
+                    <li><code>Child* createChild()</code> : Demande à l'utilisateur de saisir les infos (Nom, Prénom, Age, Adresse, État) et retourne la structure allouée.</li>
+                    <li><code>void displayChild(Child *e)</code> : Affiche la fiche d'un enfant (ex: "[SAGE] Blanc Léo (12 ans) - 123 Rue de la Paix, 75000 Paris").</li>
+                    <li><code><span class="tooltip" data-desc=" Si la liste en argument est égale à NULL alors la fonction retournera une nouvelle liste constituée de l'unique cellule nouvellement créée.">HCell* enqueueChild(HCell *h_entry, Child *e)</span></code> : Ajoute un enfant dans une liste chaînée en queue de liste (gestion des collisions).</li>
+                    <li><code>void printHEntry(HCell *h_entry) </code><span class="tooltip" data-desc="Pour cela vous pouvez utiliser la fonction displayChild">Affiche</span> la liste d'enfant présente dans l'entrée correspondant.</li>
                 </ul>
             </div>
         </section>
 
         <section id="mission2" class="panel">
-            <h2>/// PHASE 2 : INDEXATION & HACHAGE</h2>
-            <p>Il faut maintenant distribuer les enfants dans les "tiroirs" (buckets) de la table.</p>
+            <h2>/// PHASE 2 : MOTEUR D'INDEXATION v1.0</h2>
+            <p>Le tableau de bord a besoin d'une "clé" pour retrouver un enfant instantanément. Nous allons utiliser le <strong>NOM</strong> de famille comme clé de recherche pour l'instant.</p>
 
             <div class="info-terminal">
-                > INFO: Une <span class="tooltip" data-desc="Situation où deux clés différentes produisent le même index (hash).">collision</span> survient quand deux enfants ont le même hash.
-                > ACTION: Ils seront stockés dans la même liste chaînée.
+                > INFO: La fonction de hachage transforme une clé (ex: "Blanc") en un index numérique (ex: 12) correspondant à une entrée de la table de hachage de la table de hachage.
             </div>
 
-            <p><strong>2.1 L'Algorithme Naïf (Prototype)</strong></p>
+            <p><strong>2.1 Implémentation Naïve</strong></p>
+            <p>Pour tester le matériel, commencez par une fonction de hachage basique basée sur la longueur du nom.</p>
+
+            <div class="code-editor">
+                <div class="editor-header">Algo Indexation naïf</div>
+<pre><code><span class="comment">// Calcule l'index basé sur la longueur du nom</span>
+int hash_index = (strlen(key) - 1) % size;</code></pre>
+            </div>
+
+            <div class="task-list">
+                <p>[OBJECTIF 2.1] Fonctions d'insertion et d'affichage :</p>
+                <ul>
+                    <li><code>void addChild(HTable* table)</code> : 
+                        <ol>
+                            <li>Utilise la fonction <code>createChild</code> pour créer un nouvel enfant.</li>
+                            <li>Calcule le hash du nom de l'enfant.</li>
+                            <li>Ajoute l'enfant dans la liste chaînée correspondante (entrée de la table de hachage).</li>
+                        </ol>
+                    </li>
+                    <li><code>void displayTable(HTable* table)</code> : Affiche l'état de la mémoire. Pour chaque index, affichez tous les enfants présents.</li>
+                </ul>
+            </div>
+
+            <hr>
+
+            <p><strong>2.2 Module de Recherche</strong></p>
+            <p>C'est la fonction que le Père Noël utilisera en plein vol.</p>
+            <div class="task-list">
+                <ul>
+                    <li><code>Child* getChild(HTable table, char *key)</code> : Retourne la fiche de l'enfant ou NULL si introuvable.</li>
+                    <li><code>void removeChild(HTable table, char *key)</code> : Supprime un enfant de la base.</li>
+                </ul>
+            </div>
         </section>
 
         <section id="mission3" class="panel">
-            <h2>/// PHASE 3 : TEST DE CHARGE</h2>
-            <p>Le prototype fonctionne. Testons avec la liste globale.</p>
+            <h2>/// PHASE 3 : IMPORTATION MASSIVE</h2>
+            <p>Le système tient la route avec quelques données manuelles. Passons aux choses sérieuses : l'importation de la liste mondiale.</p>
             
             <div class="download-zone">
-                <a href="dataset_noel.txt" class="retro-btn">⬇️ TÉLÉCHARGER DATASET_NOEL.TXT</a>
+                <a href="dataset_world.txt" class="retro-btn">⬇️ DOWNLOAD DATASET_WORLD.TXT</a>
+            </div>
+
+            <div class="task-list">
+                <p>[OBJECTIF 3.1] Parser le fichier :</p>
+                <ul>
+                    <li><code>HTable* loadFile(const char *filename)</code> : Lit un fichier <span class="tooltip" data-desc="Format de fichier texte avec sur la première ligne le nombre d'enfants à importer et les autres lignes les données de chaque enfant (format: Nom;Prenom;Age;Adresse;Sage).">TXT</span> et remplit la table.</li>
+                </ul>
+            </div>
+
+            <div class="message-box">
+                <h3>📊 AFFICHAGE STATISTIQUES</h3>
+                <p>Avec autant de données, nous ne pouvons plus tout afficher. Modifiez votre affichage pour montrer uniquement les statistiques de répartition.</p>
+            </div>
+
+            <div class="task-list">
+                <p>[OBJECTIF 3.2] Analyse de Performance :</p>
+                <ul>
+                    <li>Créez une fonction <code>displayStats(HTable table)</code> qui affiche :
+                        <ul>
+                            <li>Nombre total d'enfants.</li>
+                            <li>Nombre "d'entrées de la table de hachage" vides.</li>
+                            <li>La taille de la liste la plus longue (pire cas de collision).</li>
+                            <li>Le nombre de <span class="tooltip" data-desc="Nombre d'entrées de la table de hachage qui contiennent plusieurs enfants">collisions</span>.</li>
+                        </ul>
+                    </li>
+                    <li>Modifiez la fonction <code>displayTable</code> pour que, au lieu d'afficher l'ensemble des éléments, elle affiche le nombre de ces éléments par entrée de la table de hachage.
+                    <p>Exemple : (0)1001 - (1)990 - (2)1013 - (3)932 - (4)1029 ...</p>
+                    </li>
+                </ul>
             </div>
         </section>
 
         <section id="mission4" class="panel">
-            <h2>/// PHASE 4 : OPTIMISATION ALGORITHMIQUE</h2>
+            <h2>/// PHASE 4 : OPTIMISATION DU MOTEUR</h2>
+            <p>L'analyse des statistiques révèle des <span class="highlight">embouteillages critiques</span>. La fonction de hachage naïve (basée sur la longueur) stocke tous les noms de 5 lettres au même endroit !</p>
+
+            <div class="info-terminal">
+                > ALERT: Collision Rate > 85%. Surcharge CPU imminente.
+            </div>
+
+            <p>Nous devons disperser les données de manière plus uniforme pour essayer d'atteindre la complexité <span class="tooltip" data-desc="Notation mathématique pour la complexité temporelle d'un algorithme. O(1) signifie que le temps d'exécution est constant, indépendant de la taille de l'entrée.">O(1)</span>.</p>
+
+            <div class="task-list">
+                <p>[OBJECTIF 4.1] Hachage ASCII v1 (First Char) :</p>
+                <ul>
+                    <li>Implémentez <code>unsigned int hashASCIIFirst(char *key, int size)</code>.</li>
+                    <li>Cette fonction utilise uniquement le code ASCII du <strong>premier caractère</strong> de la clé.</li>
+                    <li><em>Question :</em> Pourquoi cela pose-t-il encore problème ?</li>
+                </ul>
+            </div>
+
+            <div class="task-list">
+                <p>[OBJECTIF 4.2] Hachage ASCII v2 (Sum) :</p>
+                <ul>
+                    <li>Implémentez <code>unsigned int hashASCIISum(char *key, int size)</code>.</li>
+                    <li>Cette fonction calcule la <strong>somme des codes ASCII</strong> de tous les caractères de la clé, modulo la taille de la table.</li>
+                    <li>Analysez les nouvelles statistiques via <code>displayStats</code>. La répartition est-elle meilleure ?</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="mission5" class="panel">
+            <h2>/// PHASE 5 : FUTUR IMMÉDIAT</h2>
+            
+            <p>Pour les petits lutins motivés, nous devons préparer le traîneau pour les décennies à venir.</p>
+
+            <div class="task-list">
+                <p>[OBJECTIF 5.1] Hachage de meilleur Qualité (DJB2) :</p>
+                <ul>
+                    <li>La méthode "Somme ASCII" est encore trop prévisible (les anagrammes comme "RAME" et "MARE" ont le même hash !).</li>
+                    <li>Implémentez l'algorithme <strong>DJB2</strong>. Voir la section <strong>ARCHIVES</strong> pour la documentation technique.</li>
+                </ul>
+            </div>
+
+            <div class="message-box" style="border-color: #ffee00; background: rgba(255, 238, 0, 0.05);">
+                <h3>🚀 DÉFI FINAL : COLONISATION SPATIALE</h3>
+                <p><strong>SIMULATION TEMPORELLE : ANNÉE 2050.</strong></p>
+                <p>La population humaine s'est étendue sur Mars. Nous ne gérons plus 2 milliards, mais 20 milliards d'enfants.</p>
+                <p>Problème : Notre table de taille fixe sature (Facteur de charge > 10). Les collisions explosent.</p>
+            </div>
+
+            <div class="task-list">
+                <p>[OBJECTIF 5.2] Redimensionnement Dynamique (Rehashing) :</p>
+                <ul>
+                    <li>Implémentez une fonction de surveillance <code>float loadFactor(HTable table)</code> (Nombre éléments / Taille tableau).</li>
+                    <li>Si le facteur dépasse <strong>0.75</strong>, déclenchez une procédure d'urgence :
+                        <ol>
+                            <li>Créer une nouvelle table 2x plus grande.</li>
+                            <li>Recalculer le hash de TOUS les enfants existants pour les placer dans la nouvelle table (car <code>modulo size</code> change !).</li>
+                            <li>Libérer l'ancienne table.</li>
+                        </ol>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="code-editor">
+                <div class="editor-header">Prototype suggéré</div>
+<pre><code><span class="comment">// Redimensionne la table si nécessaire</span>
+void verifyAndResize(HTable *table);</code></pre>
+            </div>
+            
+            <p class="subtitle">Bonne chance, petits lutins !</p>
+        </section>
+
+        <section id="annex" class="panel">
+            <h2>/// CLASSIFIED_DATA_ARCHIVE</h2>
+            <p>Accès aux documents historiques du département R&D.</p>
+
+            <div class="info-terminal">
+                > ACCESS GRANTED: Loading historical files...
+            </div>
+
+            <h3>DOCUMENT #1 : L'Origine du Hachage</h3>
+            <p>L'idée du hachage n'est pas nouvelle. Elle a été formulée pour la première fois au début des années <strong>1950</strong> par <strong>Hans Peter Luhn</strong> (un ingénieur d'IBM).</p>
+            <p>Luhn cherchait un moyen d'accélérer la recherche de composés chimiques enregistrés sous forme codée.</p>
+
+            <hr style="border-color: #333; border-style: dashed;">
+
+            <h3>DOCUMENT #2 : L'Algorithme DJB2</h3>
+            <p>L'algorithme que nous utilisons a été créé par <strong>Daniel J. Bernstein</strong> (d'où le nom "DJB") en 1991.</p>
+            
+            <p><strong>Pourquoi ça marche ?</strong></p>
+            <p>Cet algorithme utilise deux "nombres magiques" :</p>
+            <ul>
+                <li><strong>5381</strong> : La valeur initiale du hash. Ce nombre premier a été choisi expérimentalement car il produit très peu de collisions.</li>
+                <li><strong>33</strong> : Le multiplicateur. Multiplier par 33 mélange très efficacement les bits du mot binaire.</li>
+            </ul>
+
+            <div class="code-editor">
+                <div class="editor-header">Implémentation de Référence (DJB2)</div>
+<pre><code>unsigned long hash(char *str) {
+    unsigned long hash = 5381;
+    int c;
+
+    while (c = *str++)
+        <span class="comment">// L'astuce binaire : (hash << 5) + hash </span>
+        <span class="comment">// est une façon ultra-rapide d'écrire "hash * 33"</span>
+        hash = ((hash << 5) + hash) + c; 
+
+    return hash;
+}</code></pre>
+            </div>
+            <p><em>Note : Le décalage de bits <code>&lt;&lt; 5</code> revient à multiplier par 32. En ajoutant <code>+ hash</code>, on obtient une multiplication par 33, mais beaucoup plus rapide pour le processeur !</em></p>
         </section>
     </main>
 
