@@ -2,9 +2,9 @@
     --bg-color: #050a05;
     --term-green: #4af626;
     --term-dim: #1e5223;
-    --code-bg: #1e1e1e; /* Fond sombre moderne pour le code */
+    --code-bg: #1e1e1e;
     --code-text: #d4d4d4;
-    --accent: #ff0055; /* Rouge néon Noël */
+    --accent: #ff0055;
     --highlight: #ffee00;
 }
 
@@ -15,10 +15,10 @@ body {
     margin: 0;
     padding: 20px;
     height: 100vh;
-    overflow: hidden; /* Pour garder l'effet écran */
+    overflow: hidden;
 }
 
-/* --- EFFET ECRAN CATHODIQUE --- */
+/* --- CATHODIC EFFECT --- */
 .scanlines {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -42,7 +42,7 @@ body {
     background: rgba(5, 16, 5, 0.9);
 }
 
-/* --- HEADER --- */
+/* --- HEADER BAR --- */
 .top-bar {
     display: flex;
     justify-content: space-between;
@@ -62,7 +62,7 @@ h1 {
 .highlight { color: var(--highlight); }
 .subtitle { color: #88aa88; font-size: 1.4rem; }
 
-/* --- NAVIGATION --- */
+/* --- NAVIGATION TABS --- */
 .tabs {
     display: flex;
     border-bottom: 2px solid var(--term-green);
@@ -88,7 +88,7 @@ h1 {
     font-weight: bold;
 }
 
-/* --- CONTENU --- */
+/* --- CONTENT --- */
 .panel { display: none; animation: flicker 0.2s ease-in-out; }
 .panel.active { display: block; }
 
@@ -101,40 +101,50 @@ h2 {
 
 p, li { font-size: 1.3rem; line-height: 1.5; }
 
-/* --- TOOLTIPS (Magie ici) --- */
+/* --- TOOLTIPS --- */
 .tooltip {
     border-bottom: 1px dotted var(--highlight);
     color: var(--highlight);
     cursor: help;
-    position: relative;
 }
 
-.tooltip:hover::after {
-    content: attr(data-desc);
-    position: absolute;
-    bottom: 120%;
-    left: 50%;
-    transform: translateX(-50%);
+/* Floating box */
+#retro-tooltip {
+    position: fixed;
+    z-index: 99999;
     background: #000;
-    border: 1px solid var(--highlight);
+    border: 1px solid var(--term-green);
     color: #fff;
     padding: 10px;
-    width: 250px;
-    font-family: sans-serif; /* Plus lisible pour l'explication */
-    font-size: 0.9rem;
-    border-radius: 4px;
-    z-index: 1000;
-    box-shadow: 0 0 15px rgba(255, 238, 0, 0.3);
+    max-width: 300px;
+    font-family: sans-serif;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    pointer-events: none;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.8);
+    display: block;
 }
 
-/* --- BLOCS DE CODE LISIBLES --- */
+/* Hide the box */
+#retro-tooltip.hidden {
+    display: none;
+}
+
+/* --- READABLE CODE BLOCKS --- */
 .code-editor {
     background: var(--code-bg);
     border: 1px solid #444;
     border-radius: 5px;
     margin: 20px 0;
-    overflow: hidden;
-    font-family: 'Fira Code', monospace; /* Police moderne pour le code */
+    overflow: visible !important;
+    font-family: 'Fira Code', monospace;
+    position: relative;
+    z-index: 10;
+}
+
+.code-editor pre {
+    overflow: visible !important;
+    white-space: pre-wrap;
 }
 
 .editor-header {
@@ -159,7 +169,7 @@ code {
 
 .comment { color: #6a9955; font-style: italic; }
 
-/* --- BOITES DIVERSES --- */
+/* --- MISCELLANEOUS BOXES --- */
 .message-box {
     border: 2px solid var(--accent);
     padding: 20px;
@@ -187,7 +197,7 @@ code {
 
 @keyframes flicker { from { opacity: 0.8; } to { opacity: 1; } }
 
-/* Scrollbar retro */
+/* Retro scrollbar */
 ::-webkit-scrollbar { width: 10px; }
 ::-webkit-scrollbar-track { background: var(--bg-color); }
 ::-webkit-scrollbar-thumb { background: var(--term-dim); }
