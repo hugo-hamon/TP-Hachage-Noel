@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Opération S.L.E.I.D // Terminal</title>
+    <title>Opération S.L.E.D // Terminal</title>
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=VT323&display=swap" rel="stylesheet">
@@ -20,7 +20,7 @@
             <span>MEM: 64KB OK</span>
         </div>
         <h1>
-            <span class="prefix">>>></span> PROJECT <span class="highlight">S.L.E.I.D</span>
+            <span class="prefix">>>></span> PROJECT <span class="highlight">S.L.E.D</span>
         </h1>
         <p class="subtitle">System for Logistics and Efficient Delivery</p>
     </header>
@@ -38,7 +38,7 @@
     <main>
         <section id="briefing" class="panel active">
             <div class="typewriter">
-                <p>> Connexion au traîneau [S.L.E.I.D. v4.0]...</p>
+                <p>> Connexion au traîneau [S.L.E.D. v4.0]...</p>
                 <p>> Analyse des systèmes critiques...</p>
                 <p class="error">> ERREUR: Latence CPU trop élevée.</p>
             </div>
@@ -77,18 +77,18 @@ typedef struct HCell {
 } <span class="tooltip" data-desc="Maillon de la chaîne pour gérer les collisions dans la table.">HCell</span>;
 
 typedef struct {
-    HCell ** table;     <span class="comment">/* Tableau de pointeurs (Les "Tiroirs") */</span>
-    unsigned int size;    <span class="comment">/* Nombre de tiroirs disponibles */</span>
+    HCell ** table;     <span class="comment">/* Tableau de pointeurs (Les entrées de la table de hachage) */</span>
+    unsigned int size;    <span class="comment">/* Nombre d'entrées disponibles */</span>
 } <span class="tooltip" data-desc="La table de hachage principale représentant le disque dur du traîneau.">HTable</span>;</code></pre>
             </div>
 
             <div class="task-list">
                 <p>[OBJECTIF 1.2] Compléter les différentes fonctions :</p>
                 <ul>
-                    <li><code>HTable* createTable(unsigned int size)</code> : Alloue la mémoire du tableau de bord. <span class="highlight">CRITIQUE :</span> Tous les entrée de la table de hachage doivent être à NULL initialement.</li>
+                    <li><code>HTable* createTable(unsigned int size)</code> : Alloue la mémoire du tableau de bord. <span class="highlight">CRITIQUE :</span> Toutes les entrées de la table de hachage doivent être à NULL initialement.</li>
                     <li><code>Child* createChild()</code> : Demande à l'utilisateur de saisir les infos (Nom, Prénom, Age, Adresse, État) et retourne la structure allouée.</li>
                     <li><code>void displayChild(Child *e)</code> : Affiche la fiche d'un enfant (ex: "[SAGE] Blanc Léo (12 ans) - 123 Rue de la Paix, 75000 Paris").</li>
-                    <li><code><span class="tooltip" data-desc=" Si la liste en argument est égale à NULL alors la fonction retournera une nouvelle liste constituée de l'unique cellule nouvellement créée.">HCell* enqueueChild(HCell *h_entry, Child *e)</span></code> : Ajoute un enfant dans une liste chaînée en queue de liste (gestion des collisions).</li>
+                    <li><code>HCell* enqueueChild(HCell *h_entry, Child *e)</code> : Ajoute un enfant dans une liste chaînée en queue de liste (gestion des collisions). Si la liste en argument est égale à NULL alors la fonction retournera une nouvelle liste constituée de l'unique cellule nouvellement créée</li>
                     <li><code>void printHEntry(HCell *h_entry) </code><span class="tooltip" data-desc="Pour cela vous pouvez utiliser la fonction displayChild">Affiche</span> la liste d'enfant présente dans l'entrée correspondant.</li>
                 </ul>
             </div>
@@ -127,7 +127,7 @@ int hash_index = (strlen(key) - 1) % size;</code></pre>
 
             <hr>
 
-            <p><strong>2.2 Module de Recherche</strong></p>
+            <p><strong>[OBJECTIF 2.2] Module de Recherche</strong></p>
             <p>C'est la fonction que le Père Noël utilisera en plein vol.</p>
             <div class="task-list">
                 <ul>
@@ -148,7 +148,7 @@ int hash_index = (strlen(key) - 1) % size;</code></pre>
             <div class="task-list">
                 <p>[OBJECTIF 3.1] Parser le fichier :</p>
                 <ul>
-                    <li><code>HTable* loadFile(const char *filename)</code> : Lit un fichier <span class="tooltip" data-desc="Format de fichier texte avec sur la première ligne le nombre d'enfants à importer et les autres lignes les données de chaque enfant (format: Nom;Prenom;Age;Adresse;Sage).">TXT</span> et remplit la table.</li>
+                    <li><code>HTable* loadFile(const char *filename)</code> : Lit un fichier TXT et remplit la table. Le fichier contient sur la première ligne le nombre d'enfants à importer et les autres lignes les données de chaque enfant (format: Nom;Prenom;Age;Adresse;Sage).</li>
                 </ul>
             </div>
 
