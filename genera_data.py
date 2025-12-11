@@ -1,9 +1,8 @@
 import random
-import sys
 
 # --- CONFIGURATION ---
-FILENAME = "dataset_world.txt"
-NUM_ENTRIES = 100_000
+FILENAME = "dataset_interplanetary.txt"
+NUM_ENTRIES = 1_000_000
 
 
 FIRST_NAMES = [

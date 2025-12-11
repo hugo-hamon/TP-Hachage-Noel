@@ -1,0 +1,21 @@
+20
+Laurent;Hugo;2;102 Road Washington, 25565 Edinburgh;1
+Liu;Barbara;8;913 Rue Regent, 45827 Osaka;1
+Wu;Jessica;10;507 Avenue Oxford, 96314 Tokyo;1
+Gonzalez;Arya;16;153 Allée Regent, 64446 New York;1
+Garcia;Haruto;14;761 Lane Fuji, 27947 Liverpool;1
+Dubois;Jade;2;876 Lane Baker, 14817 Milan;1
+Leroy;Chloé;6;363 Boulevard Bagshot Row, 11165 Madrid;0
+Moore;Jessica;11;76 Lane Piccadilly, 11671 Rome;1
+Rodriguez;Liam;7;773 Drive Elm, 16056 Metropolis;1
+Bertrand;Mia;14;706 Chemin Cedar, 63871 Liverpool;1
+Williams;Ji-woo;4;247 Drive Elm, 85584 Manchester;1
+Granger;Samwise;1;622 Place Diagon Alley, 64665 Bordeaux;1
+Wilson;Louise;13;455 Way Regent, 87336 Bordeaux;1
+Lopez;Alice;7;877 Avenue Park, 69856 Toronto;0
+Lefebvre;Chloé;9;599 Lane Bagshot Row, 72684 Hogsmeade;1
+Wilson;John;1;13 Chemin Kyoto, 75800 Paris;1
+Bernard;Anakin;13;677 Boulevard du Moulin, 11439 Toronto;1
+Bertrand;Isabella;5;688 Way Grimmauld Place, 32805 Los Angeles;0
+Skywalker;Giulia;14;840 Avenue Wisteria Lane, 19762 Kyoto;0
+Martin;Chloé;4;930 Allée Baker, 53125 Sydney;1
