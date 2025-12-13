@@ -27,8 +27,8 @@
 
     <nav class="tabs">
         <button class="tab-btn active" data-target="briefing">0. BRIEFING</button>
-        <button class="tab-btn" data-target="mission1">1. ARCHITECTURE</button>
-        <button class="tab-btn" data-target="mission2">2. MOTEUR</button>
+        <button class="tab-btn" data-target="mission1">1. ANCIEN MOTEUR</button>
+        <button class="tab-btn" data-target="mission2">2. NOUVEAU MOTEUR</button>
         <button class="tab-btn" data-target="mission3">3. BIG DATA</button>
         <button class="tab-btn" data-target="mission4">4. OPTIMISATION</button>
         <button class="tab-btn highlight" data-target="mission5">5. [AVANCÉ]</button>
@@ -49,20 +49,30 @@
                 
                 <p>Actuellement, le logiciel utilise une vieille version implémentant une <span class="tooltip" data-desc="Structure de données linéaire où chaque élément pointe vers le suivant. Pour trouver un élément, il faut parcourir toute la liste en O(N).">liste chaînée</span> pour stocker les profils. Avec <strong>2 milliards d'enfants</strong>, le temps de réponse empêche le Père Noël de répondre à la demande de chaque enfant.</p>
                 
-                <p><strong>VOTRE MISSION :</strong> Vous devez réécrire le noyau du tableau de bord. Nous devons passer d'une recherche linéaire lente à une <span class="tooltip" data-desc="Structure de données (Hash Table) permettant un accès quasi-constant (O(1)) aux données via une clé unique.">Table de Hachage</span> performante avant la tournée de ce soir.</p>
+                <p><strong>VOTRE MISSION :</strong> Vous devez réécrire le noyau du tableau de bord. Nous devons passer d'une recherche linéaire lente à une <span class="tooltip" data-desc="Structure de données (Hash Table) permettant un accès quasi-constant (O(1)) aux données via une clé unique.">Table de Hachage</span> performante avant la tournée du 24 décembre.</p>
             </div>
         </section>
 
         <section id="mission1" class="panel">
-            <h2>/// PHASE 1 : STRUCTURE DE DONNÉES</h2>
-            <p>Afin de pouvoir répondre à la demande de chaque enfant, le département <strong>Administratif</strong> a mis à votre disposition une structure de données permettant de stocker les profils de chaque enfant.</p>
+            <h2>/// PHASE 1 : ANCIEN MOTEUR (LISTES CHAÎNÉES)</h2>
+            <p>Avant de construire un système plus rapide, nous devons implémenter et analyser le système actuel pour comprendre ses limites. L'objectif est de coder la gestion des données via une <strong>Liste Chaînée</strong> simple.</p>
+            
+            <div class="info-terminal">
+                > INFO: Dans cette version, nous considérons qu'il n'y a PAS de conflit de clé (homonymes). Chaque enfant possède un Nom de famille unique qui servira d'identifiant. Cependant dans la réalité, il y a des homonymes, afin de traiter ce cas, plusieurs solutions sont possibles :
+                <ul>
+                    <li>Utiliser une liste chaînée pour stocker les enfants avec le même nom de famille.</li>
+                    <li>Refuser l'ajout d'un enfant avec un nom de famille déjà existant.</li>
+                    <li>Utiliser une clé plus complexe (ex: Nom de famille + Prénom).</li>
+                    <li>Remplacer l'enfant déjà présent dans la table par le nouvel enfant.</li>
+                </ul>
+            </div>
 
             <div class="task-list">
-                <p>[OBJECTIF 1.1] Créer et compléter le fichier <code>santa_hash.h</code> :</p>
+                <p>[OBJECTIF 1.1] Structures de données (fichier <code>santa.h</code>) :</p>
             </div>
 
             <div class="code-editor">
-                <div class="editor-header">santa_hash.h</div>
+                <div class="editor-header">santa.h</div>
 <pre><code>typedef struct {
     char * surname;       <span class="comment">/* Ex: "Blanc" */</span>
     char * firstname;     <span class="comment">/* Ex: "Léo" */</span>
@@ -73,67 +83,118 @@
 
 typedef struct HCell {
     Child * element;      <span class="comment">/* Pointeur vers le dossier enfant */</span>
-    struct HCell * next;  <span class="comment">/* Gestion des collisions (liste chaînée) */</span>
-} <span class="tooltip" data-desc="Maillon de la chaîne pour gérer les collisions dans la table.">HCell</span>;
-
-typedef struct {
-    HCell ** table;     <span class="comment">/* Tableau de pointeurs (Les entrées de la table de hachage) */</span>
-    unsigned int size;    <span class="comment">/* Nombre d'entrées disponibles */</span>
-} <span class="tooltip" data-desc="La table de hachage principale représentant le disque dur du traîneau.">HTable</span>;</code></pre>
+    struct HCell * next;  <span class="comment">/* Pointeur vers l'élément suivant */</span>
+} <span class="tooltip" data-desc="Maillon de la liste chaînée.">HCell</span>;
+</code></pre>
             </div>
 
             <div class="task-list">
-                <p>[OBJECTIF 1.2] Compléter les différentes fonctions :</p>
+                <p>[OBJECTIF 1.2] Gestion basique d'un enfant :</p>
+                <p>Dans un fichier <code>child.c</code>, implémentez les fonctions suivantes :</p>
                 <ul>
-                    <li><code>HTable* createTable(unsigned int size)</code> : Alloue la mémoire du tableau de bord. <span class="highlight">CRITIQUE :</span> Toutes les entrées de la table de hachage doivent être à NULL initialement.</li>
-                    <li><code>Child* createChild()</code> : Demande à l'utilisateur de saisir les infos (Nom, Prénom, Age, Adresse, État) et retourne la structure allouée.</li>
+                    <li><code>Child* createChild()</code> : Demande à l'utilisateur de saisir les infos. Vous devez allouer la mémoire pour <code>surname, firstname et address</code>.</li>
                     <li><code>void displayChild(Child *e)</code> : Affiche la fiche d'un enfant (ex: "[SAGE] Blanc Léo (12 ans) - 123 Rue de la Paix, 75000 Paris").</li>
-                    <li><code>HCell* enqueueChild(HCell *h_entry, Child *e)</code> : Ajoute un enfant dans une liste chaînée en queue de liste (gestion des collisions). Si la liste en argument est égale à NULL alors la fonction retournera une nouvelle liste constituée de l'unique cellule nouvellement créée</li>
-                    <li><code>void printHEntry(HCell *h_entry) </code><span class="tooltip" data-desc="Pour cela vous pouvez utiliser la fonction displayChild">Affiche</span> la liste d'enfant présente dans l'entrée correspondant.</li>
                 </ul>
-            </div>
-        </section>
-
-        <section id="mission2" class="panel">
-            <h2>/// PHASE 2 : MOTEUR D'INDEXATION v1.0</h2>
-            <p>Le tableau de bord a besoin d'une "clé" pour retrouver un enfant instantanément. Nous allons utiliser le <bold>NOM</bold> de famille comme clé de recherche pour l'instant.</p>
-
-            <div class="info-terminal">
-                > INFO: La fonction de hachage transforme une clé (ex: "Blanc") en un index numérique (ex: 12) correspondant à une entrée de la table de hachage de la table de hachage.
-            </div>
-
-            <p><strong>2.1 Implémentation Naïve</strong></p>
-            <p>Pour tester le matériel, commencez par une fonction de hachage basique basée sur la longueur du nom. Une table de hachage de <span class="highlight">taille 10</span> sera suffisante afin de pouvoir tester le matériel.</p>
-
-            <div class="code-editor">
-                <div class="editor-header">Algo Indexation naïf</div>
-<pre><code><span class="comment">// Calcule l'index basé sur la longueur du nom</span>
-int hash_index = (strlen(key) - 1) % size;</code></pre>
-            </div>
-
-            <div class="task-list">
-                <p>[OBJECTIF 2.1] Fonctions d'insertion et d'affichage :</p>
-                <ul>
-                    <li><code>void addChild(HTable* table)</code> : 
-                        <ol>
-                            <li>Utilise la fonction <code>createChild</code> pour créer un nouvel enfant.</li>
-                            <li>Calcule le hash du nom de l'enfant.</li>
-                            <li>Ajoute l'enfant dans la liste chaînée correspondante (entrée de la table de hachage).</li>
-                        </ol>
-                    </li>
-                    <li><code>void displayTable(HTable* table)</code> : Affiche l'état de la mémoire. Pour chaque index, affichez tous les enfants présents.</li>
-                </ul>
+                <p>👉 <em>Testez ces fonctions avec un fichier <code>mainChild.c</code> qui crée un enfant manuellement et l'affiche.</em></p>
             </div>
 
             <hr>
 
-            <p><strong>[OBJECTIF 2.2] Module de Recherche</strong></p>
-            <p>C'est la fonction que le Père Noël utilisera en plein vol.</p>
             <div class="task-list">
+                <p>[OBJECTIF 1.3] Implémentation de la Liste Chaînée :</p>
+                <p>Dans un fichier <code>linkedList.c</code>, codez les fonctions de gestion de liste :</p>
                 <ul>
-                    <li><code>Child* getChild(HTable table, char *key)</code> : Retourne la fiche de l'enfant ou NULL si introuvable.</li>
-                    <li><code>void removeChild(HTable table, char *key)</code> : Supprime un enfant de la base.</li>
+                    <li><code>HCell* enqueueChild(HCell *h_entry, Child *e)</code> : Ajoute un enfant en queue de liste.
+                        <br><span class="highlight">ATTENTION :</span> Dans notre cas, nous considérons qu'il n'y a PAS de conflit de clé (homonymes).
+                    </li>
+                    <li><code>void printList(HCell *h_entry)</code> : <span class="tooltip" data-desc="utilisez displayChild">Affiche</span> toute la liste.</li>
+                    <li><code>int listSize(HCell *h_entry)</code> : Retourne le nombre d'éléments dans la liste.</li>
+                    <li><code>Child* getChildList(HCell *h_entry, char *key)</code> : Recherche un enfant par son nom (key).
+                        <br><em>Conseil : Pour manipuler les chaînes et le parsing, regardez les fonctions <code>strtok</code> (voir exemple sur la page Universitice) et <code>strdup</code>.</em>
+                    </li>
+                    <li><code>HCell* loadFileList(const char *filename)</code> : Lit un fichier et retourne la liste chaînée complète.</li>
                 </ul>
+            </div>
+
+            <div class="message-box">
+                <h3>🧪 TEST (mainList.c)</h3>
+                <p>Créez un exécutable qui prend le nom d'un fichier en argument (ex: <code>dataset_flipou.txt</code> voir <span class="highlight">3. BIG DATA</span>).</p>
+                <ol>
+                    <li>Charge le fichier dans une liste.</li>
+                    <li>Affiche la liste complète et sa taille (Vérifiez que cela correspond au fichier source !).</li>
+                    <li>Demande à l'utilisateur un nom à rechercher et affiche le résultat (Trouvé/Non trouvé).</li>
+                    <li>Demande à l'utilisateur un nom à supprimer, effectue la suppression et affiche la nouvelle liste.</li>
+                </ol>
+            </div>
+        </section>
+
+        <section id="mission2" class="panel">
+            <h2>/// PHASE 2 : NOUVEAU MOTEUR (TABLE DE HACHAGE)</h2>
+            <p>La recherche linéaire dans une liste est trop lente O(N). Nous devons maintenant passer à une architecture basée sur une <strong>Table de Hachage</strong>.</p>
+            <p>Le principe : Utiliser une fonction mathématique pour trouver l'index directement. Les collisions (plusieurs enfants au même index) seront gérées par les listes chaînées que vous venez de coder.</p>
+
+            <div class="task-list">
+                <p>[OBJECTIF 2.1] Structure du Moteur (ajout à <code>santa.h</code>) :</p>
+            </div>
+
+            <div class="code-editor">
+<pre><code>typedef struct {
+    HCell ** table;       <span class="comment">/* Tableau de pointeurs (Les entrées de la table de hachage) */</span>
+    unsigned int size;    <span class="comment">/* Nombre d'entrées disponibles (taille du tableau) */</span>
+} <span class="tooltip" data-desc="La table de hachage principale représentant le disque dur du traîneau.">HTable</span>;</code></pre>
+            </div>
+
+            <div class="task-list">
+                <p>[OBJECTIF 2.2] Implémentation (fichier <code>hashTable.c</code>) :</p>
+                <p>Vous pouvez et DEVEZ réutiliser les fonctions de vos listes chaînées (<code>enqueueChild</code>, <code>printList</code>, etc.) pour gérer le contenu de chaque case du tableau.</p>
+                <ul>
+                    <li><code>int hash1(HTable *ht, char *clef)</code> : Fonction de hachage. Vous pouvez utiliser la fonction suivante :
+                        <div class="code-editor">
+                            <div class="editor-header">Algo Indexation naïf</div>
+<pre><code><span class="comment">// Calcule l'index basé sur la longueur du nom</span>
+int hash_index = (strlen(key) - 1) % size;</code></pre>
+            </div>
+                    </li>
+                    <li><code>void addChild(HTable* htable, Child *e)</code> : Calcule le hash, puis utilise <code>enqueueChild</code> pour ajouter l'enfant à l'index correct.</li>
+                    <li><code>HTable* loadFileHash(const char *filename)</code> : Charge un fichier complet dans la table (Réutilisez la logique de lecture de fichier de la phase 1).</li>
+                    <li><code>Child* getChildHTable(HTable *h, char *key)</code> : Trouve l'index via le hash, puis cherche dans la liste correspondante (Réutilisez <code>getChildList</code>).</li>
+                    <li><code>void removeChildHash(HTable *h, char *key)</code> : Supprime un enfant de la table.</li>
+                </ul>
+            </div>
+
+            <div class="task-list">
+                <p>[OBJECTIF 2.3] Affichage Diagnostic :</p>
+                <p>Implémentez <code>void displayTable(HTable* htable)</code>. Vous pouvez pour cela vous inpirer de l'affichage suivant :
+            </div>
+
+            <div class="code-editor">
+                <div class="editor-header">Exemple d'affichage</div>
+<pre><code>
+OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+O Affichage de la table de Hachage O
+OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO
+
+Elements à l'indice 0
+------------------------
+[SAGE] Blanc Léo (12 ans) - 123 Rue de la Paix, 75000 Paris
+[SAGE] Lelon Belin (14 ans) - 15 Avenue Regent, 76000 Rouen
+
+Elements à l'indice 1
+------------------------
+[PAS SAGE] Leverd Amoro (16 ans) - 502 Place High, 10485 Hamburg
+                             ...
+</code></pre>
+            </div>
+
+            <div class="message-box">
+                <h3>🚀 LANCEMENT (mainHash.c)</h3>
+                <p>Comme pour la phase précédente, créez un main qui :</p>
+                <ol>
+                    <li>Prend un nom de fichier en argument.</li>
+                    <li>Initialise la table (taille 10 pour commencer).</li>
+                    <li>Affiche la table avec la fonction ci-dessus.</li>
+                    <li>Permet à l'utilisateur de tester la recherche et la suppression interactivement.</li>
+                </ol>
             </div>
         </section>
 
