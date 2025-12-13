@@ -59,6 +59,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // --- GESTION DU CURSEUR ---
+    const cursor = document.getElementById('custom-cursor');
+
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+    });
+
+    // Effet visuel au clic
+    document.addEventListener('mousedown', () => {
+        cursor.classList.add('clicking');
+    });
+
+    document.addEventListener('mouseup', () => {
+        cursor.classList.remove('clicking');
+    });
+
     // "Easter egg"
     console.log("%c SANTA PROTOCOL INITIATED ", "background: #ff0055; color: white; font-size: 20px;");
 });

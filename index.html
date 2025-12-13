@@ -58,7 +58,7 @@
             <p>Avant de construire un système plus rapide, nous devons implémenter et analyser le système actuel pour comprendre ses limites. L'objectif est de coder la gestion des données via une <strong>Liste Chaînée</strong> simple.</p>
             
             <div class="info-terminal">
-                > INFO: Dans cette version, nous considérons qu'il n'y a PAS de conflit de clé (homonymes). Chaque enfant possède un Nom de famille unique qui servira d'identifiant. Cependant dans la réalité, il y a des homonymes, afin de traiter ce cas, plusieurs solutions sont possibles :
+                > INFO: Dans cette version, nous considérons qu'il n'y a PAS d'homonymes. Chaque enfant possède un Nom de famille unique qui servira d'identifiant unique. Cependant dans la réalité, il y a des homonymes, afin de traiter ce cas, plusieurs solutions sont possibles :
                 <ul>
                     <li>Utiliser une liste chaînée pour stocker les enfants avec le même nom de famille.</li>
                     <li>Refuser l'ajout d'un enfant avec un nom de famille déjà existant.</li>
@@ -118,7 +118,10 @@ typedef struct HCell {
 
             <div class="message-box">
                 <h3>🧪 TEST (mainList.c)</h3>
-                <p>Créez un exécutable qui prend le nom d'un fichier en argument (ex: <code>dataset_flipou.txt</code> voir <span class="highlight">3. BIG DATA</span>).</p>
+                <p>Créez un exécutable qui prend le nom d'un fichier en argument. Pour cela, vous pouvez télécharger le fichier <code>dataset_flipou.txt</code> contenant la liste de 20 enfants de la ville de <a href="https://maps.app.goo.gl/uyHRCpmkavFz8nT89" class="link">Flipou</a>.</p>
+                <div class="download-zone">
+                    <a href="dataset_flipou.txt" class="retro-btn">⬇️ DOWNLOAD DATASET_FLIPOU.TXT</a>
+                </div>
                 <ol>
                     <li>Charge le fichier dans une liste.</li>
                     <li>Affiche la liste complète et sa taille (Vérifiez que cela correspond au fichier source !).</li>
@@ -130,7 +133,7 @@ typedef struct HCell {
 
         <section id="mission2" class="panel">
             <h2>/// PHASE 2 : NOUVEAU MOTEUR (TABLE DE HACHAGE)</h2>
-            <p>La recherche linéaire dans une liste est trop lente O(N). Nous devons maintenant passer à une architecture basée sur une <strong>Table de Hachage</strong>.</p>
+            <p>La recherche linéaire dans une liste est trop lente, en O(N). Nous devons maintenant passer à une architecture basée sur une <strong>Table de Hachage</strong>.</p>
             <p>Le principe : Utiliser une fonction mathématique pour trouver l'index directement. Les collisions (plusieurs enfants au même index) seront gérées par les listes chaînées que vous venez de coder.</p>
 
             <div class="task-list">
@@ -152,7 +155,7 @@ typedef struct HCell {
                         <div class="code-editor">
                             <div class="editor-header">Algo Indexation naïf</div>
 <pre><code><span class="comment">// Calcule l'index basé sur la longueur du nom</span>
-int hash_index = (strlen(key) - 1) % size;</code></pre>
+int hash_index = strlen(key) % size;</code></pre>
             </div>
                     </li>
                     <li><code>void addChild(HTable* htable, Child *e)</code> : Calcule le hash, puis utilise <code>enqueueChild</code> pour ajouter l'enfant à l'index correct.</li>
@@ -164,7 +167,7 @@ int hash_index = (strlen(key) - 1) % size;</code></pre>
 
             <div class="task-list">
                 <p>[OBJECTIF 2.3] Affichage Diagnostic :</p>
-                <p>Implémentez <code>void displayTable(HTable* htable)</code>. Vous pouvez pour cela vous inpirer de l'affichage suivant :
+                <p>Implémentez <code>void displayTable(HTable* htable)</code>. Vous pouvez pour cela vous inspirer de l'affichage suivant :
             </div>
 
             <div class="code-editor">
@@ -199,19 +202,13 @@ Elements à l'indice 1
         </section>
 
         <section id="mission3" class="panel">
-            <h2>/// PHASE 3 : IMPORTATION DES DONNÉES</h2>
-            <p>Maintenant que le système tient la route avec quelques données manuelles, passons aux choses sérieuses et importons quelques données d'enfants provenant de la ville de <a href="https://maps.app.goo.gl/uyHRCpmkavFz8nT89" class="link">Flipou</a>.</p>
+            <h2>/// PHASE 3 : IMPORTATION DE DONNÉES MASSIVES</h2>
+            <p>Maintenant que le système tient la route avec quelques données manuelles, passons aux choses sérieuses et importons des données d'enfants provenant de la terre entière.
             
             <div class="download-zone">
-                <a href="dataset_flipou.txt" class="retro-btn">⬇️ DOWNLOAD DATASET_FLIPOU.TXT</a>
+                <a href="dataset_world.txt" class="retro-btn">⬇️ DOWNLOAD DATASET_WORLD.TXT</a>
             </div>
-
-            <div class="task-list">
-                <p>[OBJECTIF 3.1] Parser le fichier :</p>
-                <ul>
-                    <li><code>HTable* loadFile(const char *filename)</code> : Lit un fichier TXT et remplit la table. Le fichier contient sur la première ligne le nombre d'enfants à importer et les autres lignes les données de chaque enfant (format: Nom;Prenom;Age;Adresse;Sage).</li>
-                </ul>
-            </div>
+            </br>
 
             <div class="message-box">
                 <h3>📊 AFFICHAGE STATISTIQUES</h3>
@@ -219,7 +216,7 @@ Elements à l'indice 1
             </div>
 
             <div class="task-list">
-                <p>[OBJECTIF 3.2] Analyse de Performance :</p>
+                <p>[OBJECTIF 3.1] Analyse de Performance :</p>
                 <ul>
                     <li>Créez une fonction <code>displayStats(HTable table)</code> qui affiche :
                         <ul>
@@ -229,19 +226,15 @@ Elements à l'indice 1
                             <li>Le nombre de <span class="tooltip" data-desc="Nombre d'entrées de la table de hachage qui contiennent plusieurs enfants">collisions</span>.</li>
                         </ul>
                     </li>
-                    <li>Modifiez la fonction <code>displayTable</code> pour que, au lieu d'afficher l'ensemble des éléments, elle affiche le nombre de ces éléments par entrée de la table de hachage.
-                    <p>Exemple : (0)1001 - (1)990 - (2)1013 - (3)932 - (4)1029 ...</p>
+                    <li>Modifiez la fonction <code>displayTable</code> pour que, au lieu d'afficher l'ensemble des enfants, elle affiche le nombre d'enfants par entrée de la table de hachage.
+                    <div class="info-terminal">
+                        > EXEMPLE : (0)1001 - (1)990 - (2)1013 - (3)932 - (4)1029 ...
+                    </div>
                     </li>
                 </ul>
-                <div class="message-box">
-                    <h3>🌍 IMPORTATION DE LA LISTE MONDIALE</h3>
-                    <p>Maintenant que vous avez testé le matériel avec la liste de Flipou, vous pouvez également importer la liste mondiale en utilisant la fonction <code>loadFile</code> et afficher les statistiques de répartition.</p>
-                    <div class="download-zone">
-                        <a href="dataset_world.txt" class="retro-btn">⬇️ DOWNLOAD DATASET_WORLD.TXT</a>
-                    </div>  
-                </div>
+
                 <div class="info-terminal">
-                    > INFO: Avec votre table de hachage de taille 10 le nombre de collisions risque d'augmenter considerablement. Augmentez la taille de la table afin de pouvoir traiter la liste mondiale de manière plus efficace.
+                    > INFO: Avec votre table de hachage de taille 10 le nombre de collisions risque d'augmenter <span class="highlight">considérablement</span>. Augmentez la taille de la table afin de pouvoir traiter la liste mondiale de manière plus efficace. Analysez le nombre de collisions pour différentes tailles de table. Augmentez de plus en plus la taille de la table améliore-t-il le nombre de collisions ?
                 </div>
             </div>
         </section>
@@ -374,6 +367,7 @@ void verifyAndResize(HTable *table);</code></pre>
 </div>
 
 <div id="retro-tooltip" class="hidden"></div>
+<div id="custom-cursor"></div>
 <script src="script.js"></script>
 </body>
 
