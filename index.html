@@ -234,6 +234,60 @@ qualité = somme((nombre_d'enfants_par_entrée - &alpha;) / &alpha;)</code></pre
                             </li>
 
                         </ul>
+                        <!-- Exemple de sortie : -->
+                        <div class="code-editor limit-height">
+                            <div class="editor-header">Exemple de sortie</div>
+                            <pre><code>./mainDisplayStats dataset_flipou.txt 10
+===================================================================================
+1. Prend un nom de fichier et une taille de table en arguments.
+===================================================================================
+Fichier chargé : dataset_flipou.txt
+===================================================================================
+2. Initialise la table.
+===================================================================================
+Taille de la table : 10
+20 données à lire (100%)
+===================================================================================
+3. Affiche les statistiques.
+===================================================================================
+Nombre total d'enfants : 20
+Nombre d'entrées de la table de hachage vides : 0
+Taille de la liste la plus longue : 4
+Nombre de collisions : 16
+Qualité de la répartition : 4.000
+===================================================================================
+4. Affiche le nombre d'enfants par entrée.
+===================================================================================
+(0)1 - (1)1 - (2)2 - (3)2 - (4)1 - (5)2 - (6)3 - (7)1 - (8)4 - (9)3
+
+
+./mainDisplayStats dataset_world.txt 30
+===================================================================================
+1. Prend un nom de fichier et une taille de table en arguments.
+===================================================================================
+Fichier chargé : dataset_world.txt
+===================================================================================
+2. Initialise la table.
+===================================================================================
+Taille de la table : 30
+100000 données à lire (100%)
+===================================================================================
+3. Affiche les statistiques.
+===================================================================================
+Nombre total d'enfants : 100000
+Nombre d'entrées de la table de hachage vides : 0
+Taille de la liste la plus longue : 16515
+Nombre de collisions : 100000
+Qualité de la répartition : 32.569
+===================================================================================
+4. Affiche le nombre d'enfants par entrée.
+===================================================================================
+(0)27 - (1)18 - (2)37 - (3)283 - (4)1886 - (5)6797 - (6)13292 - (7)16515 
+- (8)15200 - (9)11669 - (10)7962 - (11)5379 - (12)3907 - (13)3561 - 
+(14)3174 - (15)2762 - (16)2210 - (17)1594 - (18)1120 - (19)702 - (20)513 
+- (21)321 - (22)270 - (23)225 - (24)163 - (25)141 - (26)102 - (27)81 - 
+(28)52 - (29)37</code></pre>
+                        </div>
                     </li>
                     <li>Créez une fonction <code>void displayTableSize(HTable *table)</code> pour afficher le nombre d'enfants par entrée de la table de hachage.
                     <div class="info-terminal">
