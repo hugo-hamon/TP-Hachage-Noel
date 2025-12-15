@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=VT323&display=swap" rel="stylesheet">
-    <link rel="icon" href="icon.png">
+    <link rel="icon" href="icon.ico" type="image/x-icon">
 </head>
 <body>
 
@@ -107,6 +107,7 @@ typedef struct HCell {
                     <li><code>HCell* enqueueChild(HCell *h_entry, Child *e)</code> : Ajoute un enfant en queue de liste.
                         <br><span class="highlight">ATTENTION :</span> Dans notre cas, nous considérons qu'il n'y a PAS de conflit de clé (homonymes).
                     </li>
+                    <li><code>void removeChildList(HCell *h_entry, char *key)</code> : Supprime un enfant de la liste.</li>
                     <li><code>void printList(HCell *h_entry)</code> : <span class="tooltip" data-desc="utilisez displayChild">Affiche</span> toute la liste.</li>
                     <li><code>int listSize(HCell *h_entry)</code> : Retourne le nombre d'éléments dans la liste.</li>
                     <li><code>Child* getChildList(HCell *h_entry, char *key)</code> : Recherche un enfant par son nom (key).
@@ -218,15 +219,23 @@ Elements à l'indice 1
             <div class="task-list">
                 <p>[OBJECTIF 3.1] Analyse de Performance :</p>
                 <ul>
-                    <li>Créez une fonction <code>displayStats(HTable table)</code> qui affiche :
+                    <li>Créez une fonction <code>displayStats(HTable *table)</code> qui affiche :
                         <ul>
                             <li>Nombre total d'enfants.</li>
                             <li>Nombre d'entrées de la table de hachage vides.</li>
                             <li>La taille de la liste la plus longue (pire cas de collision).</li>
-                            <li>Le nombre de <span class="tooltip" data-desc="Nombre d'entrées de la table de hachage qui contiennent plusieurs enfants">collisions</span>.</li>
+                            <li>Le nombre de <span class="tooltip" data-desc="Nombre d'enfants avec le même hash (clé).">collisions</span>. Par exemple, si 10 enfants dans une table de taille 10 ont le même hash, le taux de collisions est de 100%. Cependant, si chaque enfant a un hash différent, le taux de collisions est de 0%.</li>
+                            <li>La qualité de la répartition. Pour cela, vous pouvez utiliser la formule suivante :
+                                <div class="code-editor">
+                                <pre><code>// &alpha; = nombre d'enfants / taille de la table
+qualité = somme((nombre_d'enfants_par_entrée - &alpha;) / &alpha;)</code></pre>
+                                </div>
+                                Plus la qualité est proche de 0, plus la répartition est uniforme.
+                            </li>
+
                         </ul>
                     </li>
-                    <li>Modifiez la fonction <code>displayTable</code> pour que, au lieu d'afficher l'ensemble des enfants, elle affiche le nombre d'enfants par entrée de la table de hachage.
+                    <li>Créez une fonction <code>void displayTableSize(HTable *table)</code> pour afficher le nombre d'enfants par entrée de la table de hachage.
                     <div class="info-terminal">
                         > EXEMPLE : (0)1001 - (1)990 - (2)1013 - (3)932 - (4)1029 ...
                     </div>
@@ -291,7 +300,7 @@ Elements à l'indice 1
             <div class="task-list">
                 <p>[OBJECTIF 5.2] Redimensionnement Dynamique (Rehashing) :</p>
                 <ul>
-                    <li>Implémentez une fonction de surveillance <code>float loadFactor(HTable table)</code> (Nombre éléments / Taille tableau).</li>
+                    <li>Implémentez une fonction de surveillance <code>float loadFactor(HTable *table)</code> (Nombre éléments / Taille tableau).</li>
                     <li>Si le facteur dépasse <strong>0.75</strong>, déclenchez une procédure d'urgence :
                         <ol>
                             <li>Créer une nouvelle table 2x plus grande.</li>
