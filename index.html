@@ -107,7 +107,7 @@ typedef struct HCell {
                     <li><code>HCell* enqueueChild(HCell *h_entry, Child *e)</code> : Ajoute un enfant en queue de liste.
                         <br><span class="highlight">ATTENTION :</span> Dans notre cas, nous considérons qu'il n'y a PAS de conflit de clé (homonymes).
                     </li>
-                    <li><code>void removeChildList(HCell *h_entry, char *key)</code> : Supprime un enfant de la liste.</li>
+                    <li><code>HCell* removeChildList(HCell *h_entry, char *key)</code> : Supprime un enfant de la liste.</li>
                     <li><code>void printList(HCell *h_entry)</code> : <span class="tooltip" data-desc="utilisez displayChild">Affiche</span> toute la liste.</li>
                     <li><code>int listSize(HCell *h_entry)</code> : Retourne le nombre d'éléments dans la liste.</li>
                     <li><code>Child* getChildList(HCell *h_entry, char *key)</code> : Recherche un enfant par son nom (key).
