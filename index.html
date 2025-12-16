@@ -33,6 +33,7 @@
         <button class="tab-btn" data-target="mission4">4. OPTIMISATION</button>
         <button class="tab-btn highlight" data-target="mission5">5. [AVANCÉ]</button>
         <button class="tab-btn" data-target="annex">6. ARCHIVES</button>
+        <button class="tab-btn highlight" data-target="exchange">7. ÉCHANGE</button>
     </nav>
 
     <main>
@@ -110,10 +111,11 @@ typedef struct HCell {
                     <li><code>HCell* removeChildList(HCell *h_entry, char *key)</code> : Supprime un enfant de la liste par son nom (key).</li>
                     <li><code>void printList(HCell *h_entry)</code> : <span class="tooltip" data-desc="utilisez displayChild">Affiche</span> toute la liste.</li>
                     <li><code>int listSize(HCell *h_entry)</code> : Retourne le nombre d'éléments dans la liste.</li>
-                    <li><code>Child* getChildList(HCell *h_entry, char *key)</code> : Recherche un enfant par son nom (key).
+                    <li><code>Child* getChildList(HCell *h_entry, char *key)</code> : Recherche un enfant par son nom (key).</li>
+                    <li>
+                        <code>HCell* loadFileList(const char *filename)</code> : Lit un fichier et retourne la liste chaînée complète.
                         <br><em>Conseil : Pour manipuler les chaînes et le parsing, regardez les fonctions <code>strtok</code> (voir exemple sur la page Universitice) et <code>strdup</code>.</em>
                     </li>
-                    <li><code>HCell* loadFileList(const char *filename)</code> : Lit un fichier et retourne la liste chaînée complète.</li>
                 </ul>
             </div>
 
@@ -421,6 +423,34 @@ void verifyAndResize(HTable *table);</code></pre>
 }</code></pre>
             </div>
             <p><em>Note : Le décalage de bits <code>&lt;&lt; 5</code> revient à multiplier par 32. En ajoutant <code>+ hash</code>, on obtient une multiplication par 33, mais beaucoup plus rapide pour le processeur !</em></p>
+        </section>
+
+        <section id="exchange" class="panel">
+            <h2>/// CANAL DE COMMUNICATION</h2>
+            <p>Zone de discussion pour les lutins. Donnez vos retours ou signalez des bugs.</p>
+        
+            <div class="message-box" style="border-color: #4af626; background: rgba(74, 246, 38, 0.05);">
+                <h3>📡 TRANSMISSION EN COURS</h3>
+                <p>Connectez-vous avec votre compte GitHub pour laisser une trace dans le journal de bord.</p>
+            </div>
+        
+            <div class="giscus-frame code-editor limit-height-plus" style="background: transparent; border: none;">
+                <script src="https://giscus.app/client.js"
+                        data-repo="hugo-hamon/TP-Hachage-Noel"
+                        data-repo-id="R_kgDOQlxVQA"
+                        data-category="General"
+                        data-category-id="DIC_kwDOQlxVQM4Cz3LU"
+                        data-mapping="pathname"
+                        data-strict="0"
+                        data-reactions-enabled="1"
+                        data-emit-metadata="0"
+                        data-input-position="bottom"
+                        data-theme="dark_dimmed"
+                        data-lang="fr"
+                        crossorigin="anonymous"
+                        async>
+                </script>
+            </div>
         </section>
     </main>
 

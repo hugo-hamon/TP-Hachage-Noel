@@ -238,6 +238,11 @@ code {
     overflow-y: scroll !important;
 }
 
+.limit-height-plus {
+    max-height: 700px;
+    overflow-y: scroll !important;
+}
+
 /* Retro scrollbar */
 ::-webkit-scrollbar { width: 10px; }
 ::-webkit-scrollbar-track { background: var(--bg-color); }
