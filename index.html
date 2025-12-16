@@ -92,7 +92,7 @@ typedef struct HCell {
                 <p>[OBJECTIF 1.2] Gestion basique d'un enfant :</p>
                 <p>Dans un fichier <code>child.c</code>, implémentez les fonctions suivantes :</p>
                 <ul>
-                    <li><code>Child* createChild()</code> : Demande à l'utilisateur de saisir les infos. Vous devez allouer la mémoire pour <code>surname, firstname et address</code>.</li>
+                    <li><code>Child* createChild()</code> : Demande à l'utilisateur de saisir les infos. Vous devez allouer la mémoire pour <code>surname, firstname et address</code>. On utilisera par ailleurs la fonction <span class="highlight">fgets</span> pour lire les saisies de l'utilisateur.</li>
                     <li><code>void displayChild(Child *e)</code> : Affiche la fiche d'un enfant (ex: "[SAGE] Blanc Léo (12 ans) - 123 Rue de la Paix, 75000 Paris").</li>
                 </ul>
                 <p>👉 <em>Testez ces fonctions avec un fichier <code>mainChild.c</code> qui crée un enfant manuellement et l'affiche.</em></p>
