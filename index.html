@@ -410,7 +410,7 @@ void verifyAndResize(HTable *table);</code></pre>
 
             <div class="code-editor">
                 <div class="editor-header">Implémentation de Référence (DJB2)</div>
-<pre><code>unsigned long hash(char *str) {
+<pre><code>unsigned long hash(char *str, int size) {
     unsigned long hash = 5381;
     int c;
 
@@ -419,7 +419,7 @@ void verifyAndResize(HTable *table);</code></pre>
         <span class="comment">// est une façon ultra-rapide d'écrire "hash * 33"</span>
         hash = ((hash << 5) + hash) + c; 
 
-    return hash;
+    return hash % size;
 }</code></pre>
             </div>
             <p><em>Note : Le décalage de bits <code>&lt;&lt; 5</code> revient à multiplier par 32. En ajoutant <code>+ hash</code>, on obtient une multiplication par 33, mais beaucoup plus rapide pour le processeur !</em></p>

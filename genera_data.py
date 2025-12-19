@@ -41,7 +41,7 @@ def load_csv_column(filepath, column_name):
     """Charge une colonne spécifique d'un fichier CSV dans une liste."""
     data_list = []
     if not os.path.exists(filepath):
-        print(f"[AVERTISSEMENT] Fichier introuvable : {filepath}")
+        print(f"Fichier introuvable : {filepath}")
         return []
 
     try:
@@ -53,7 +53,7 @@ def load_csv_column(filepath, column_name):
                 if column_name in row and row[column_name]
             )
     except Exception as e:
-        print(f"[ERREUR] Problème lors de la lecture de {filepath} : {e}")
+        print(f"Problème lors de la lecture de {filepath} : {e}")
 
     return data_list
 
@@ -88,7 +88,6 @@ def generate_entry(first_names, last_names):
 
 
 def main(first_names, last_names):
-    print("--- INITIALISATION DU GÉNÉRATEUR S.L.E.I.D ---")
     print(f"Destination: {FILENAME}")
     print(f"Volume: {NUM_ENTRIES} entrées")
     print("Génération en cours...", end="")
@@ -101,16 +100,15 @@ def main(first_names, last_names):
                 line = generate_entry(first_names, last_names)
                 f.write(line + "\n")
 
-                # Barre de progression simple
                 if i % (NUM_ENTRIES // 10) == 0:
                     print(".", end="", flush=True)
 
-        print(f"\n[OK] Fichier '{FILENAME}' généré avec succès.")
+        print(f"\nFichier '{FILENAME}' généré correctement.")
         print(
             f"Taille approximative : {NUM_ENTRIES * 60 / 1024 / 1024:.2f} MB")
 
     except IOError as e:
-        print(f"\n[ERREUR] Impossible d'écrire le fichier : {e}")
+        print(f"\nImpossible d'écrire le fichier : {e}")
 
 
 if __name__ == "__main__":
